@@ -1702,3 +1702,89 @@ exif_entry_initialize (ExifEntry *e, ExifTag tag)
                 break;
 	}
 }
+
+void
+exif_entry_gps_initialize (ExifEntry *e, int tag)
+{
+        ExifRational r;
+        ExifByteOrder o;
+
+        /* We need the byte order */
+        if (!e || !e->parent || e->data || !e->parent->parent)
+                return;
+        o = exif_data_get_byte_order (e->parent->parent);
+
+        e->tag = tag;
+        switch (tag) {
+        /* BYTE, 4 components, default (0x2, 0x2, 0x0, 0x0) */
+        case EXIF_TAG_GPS_VERSION_ID:
+                e->components = 4;
+                e->format = EXIF_FORMAT_BYTE;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                exif_set_short (e->data, o, 0x0202);
+                exif_set_short (e->data + 2 * exif_format_get_size (e->format), o, 0x0000);
+                break;
+	
+        /* RATIONAL, component, default 0/1 */
+        case EXIF_TAG_GPS_ALTITUDE:
+                e->components = 1;
+                e->format = EXIF_FORMAT_RATIONAL;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                r.numerator = 0;
+                r.denominator = 1;
+                exif_set_rational (e->data, o, r);
+                break;
+	
+	        /* RATIONAL, 3 components, default 0/1*/
+        case EXIF_TAG_YCBCR_COEFFICIENTS:
+        case EXIF_TAG_GPS_TIME_STAMP:
+        case EXIF_TAG_GPS_LONGITUDE:        
+        case EXIF_TAG_GPS_LATITUDE:
+                e->components = 3;
+                e->format = EXIF_FORMAT_RATIONAL;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                r.numerator = 1;
+                r.denominator = 1;
+                exif_set_rational (e->data, o, r);
+                exif_set_rational (e->data + exif_format_get_size (e->format), o, r);
+                exif_set_rational (e->data + 2 * exif_format_get_size (e->format), o, r);
+                break;
+	
+        /* BYTE 1 Components, default 0*/
+        case EXIF_TAG_GPS_ALTITUDE_REF:
+                e->components = 1;
+                e->format = EXIF_FORMAT_BYTE;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                memset((char *) e->data, 0, e->size);
+                break;
+	
+        /* ASCII 2 Components,  default 0*/
+        case EXIF_TAG_GPS_LATITUDE_REF:
+        case EXIF_TAG_GPS_LONGITUDE_REF:
+                e->components = 2;
+                e->format = EXIF_FORMAT_ASCII;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                memset((char *) e->data, 0, e->size);
+                break;
+       
+        /* ASCII 20 Components, no default*/
+        case EXIF_TAG_GPS_MAP_DATUM:
+                e->components = 20;
+                e->format = EXIF_FORMAT_ASCII;
+                e->size = exif_format_get_size (e->format) * e->components;
+                e->data = exif_entry_alloc (e, e->size);
+                if (!e->data) break;
+                break;
+        }
+}
+

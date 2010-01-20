@@ -124,6 +124,8 @@ void        exif_entry_free  (ExifEntry *entry);
  */
 void        exif_entry_initialize (ExifEntry *e, ExifTag tag);
 
+void        exif_entry_gps_initialize (ExifEntry *e, int tag);
+
 /*! Fix the type or format of the given EXIF entry to bring it into spec.
  * If the data for this EXIF tag is in of the wrong type or is in an invalid
  * format according to the EXIF specification, then it is converted to make it
