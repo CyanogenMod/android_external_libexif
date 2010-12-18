@@ -35,5 +35,6 @@ LOCAL_CFLAGS += -Wall $(libexifgnu_DEFINES) -g -O2
 LOCAL_CPPFLAGS += -Wall $(libexifgnu_DEFINES) -g -O2
 
 LOCAL_MODULE:= libexifgnu
+LOCAL_MODULE_TAGS:= optional
 
 include $(BUILD_STATIC_LIBRARY)
