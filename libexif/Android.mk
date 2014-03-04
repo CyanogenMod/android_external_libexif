@@ -20,6 +20,8 @@ include $(CLEAR_VARS)
 # WARNING: this makefile builds a shared library. Do not ever make it build
 # a static library or otherwise statically link libexif with your code.
 
+LOCAL_CLANG := true
+
 LOCAL_C_INCLUDES := \
     $(TOP)/external/libexif
 
@@ -56,6 +58,8 @@ LOCAL_SHARED_LIBRARIES := \
 	libcutils \
 	libutils \
 	liblog
+
+LOCAL_CFLAGS += -ftrapv
 
 include $(BUILD_SHARED_LIBRARY)
 
