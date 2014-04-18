@@ -989,7 +989,7 @@ exif_entry_get_value (ExifEntry *e, char *val, unsigned int maxlen)
 				int editor_ofs = tagdata - e->data;
 				int remaining = e->size - editor_ofs;
 				if (match_repeated_char(tagdata, ' ', remaining)) {
-					strncat (val, (const char*)tagdata, MIN (maxlen - strlen (val), remaining));
+					strncat (val, (const char*)tagdata, MIN (maxlen - strlen (val), (size_t)remaining));
 					++k;
 				}
 			}

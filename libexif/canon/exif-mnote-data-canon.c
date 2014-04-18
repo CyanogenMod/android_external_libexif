@@ -267,7 +267,7 @@ exif_mnote_data_canon_load (ExifMnoteData *ne,
 			if ((dataofs + s < s) || (dataofs + s < dataofs) || (dataofs + s > buf_size)) {
 				exif_log (ne->log, EXIF_LOG_CODE_DEBUG,
 					"ExifMnoteCanon",
-					"Tag data past end of buffer (%u > %u)",
+					"Tag data past end of buffer (%zu > %u)",
 					dataofs + s, buf_size);
 				continue;
 			}
